@@ -5,13 +5,16 @@ from bs4 import BeautifulSoup as soup
 import pandas as pd
 import datetime as dt
 
+
 # Set the executable path and initialize the chrome browser in splinter
 #executable_path = {'executable_path': '/usr/local/bin/chromedriver'}
 
 def scrape_all():
-    browser = Browser('chrome', executable_path="chromedriver", headless=True)
+    #initiate headless driver
+    browser = Browser("chrome", executable_path="chromedriver", headless=True)
+    #browser = Browser("chrome", **executable_path, headless=True)
 
-    #set news title and paragrapp equal to mars_news() function
+    # set news title and paragrapp equal to mars_news() function
     news_title, news_paragraph = mars_news(browser)
 
     # Run all scraping functions and store results in dictionary
@@ -27,7 +30,8 @@ def scrape_all():
     browser.quit()
     return data
 
-#function to get mars update
+
+# function to get mars update
 def mars_news(browser):
     # Visit the mars nasa news site
     url = 'https://mars.nasa.gov/news/'
@@ -44,14 +48,12 @@ def mars_news(browser):
     try:
         slide_elem = news_soup.select_one('ul.item_list li.slide')
 
-        #slide_elem.find("div", class_='content_title')
-
         # Use the parent element to find the first `a` tag and save it as `news_title`
         news_title = slide_elem.find("div", class_='content_title').get_text()
-        
+
         # Use the parent element to find the paragraph text
         news_p = slide_elem.find('div', class_="article_teaser_body").get_text()
-    
+
     except AttributeError:
         return None, None
 
@@ -87,10 +89,11 @@ def featured_image(browser):
         return None
 
     # Use the base URL to create an absolute URL
-    #using an f-string for this print statement because it's a cleaner way 
-    #to create print statements; they're also evaluated at run-time. 
-    img_url = f'https://www.jpl.nasa.gov{img_url_rel}'
-    
+    # using an f-string for this print statement because it's a cleaner way
+    # to create print statements; they're also evaluated at run-time.
+    img_url = f"https://www.jpl.nasa.gov{img_url_rel}"
+    #img_url
+
     return img_url
 
 
@@ -98,22 +101,26 @@ def featured_image(browser):
 
 def mars_facts():
     try:
-        #use Pandas '.read_html" to scrape the facts table into a dataframe
+        # print(pd.read_html('http://space-facts.com/mars/')[0])
+        # use Pandas '.read_html" to scrape the facts table into a dataframe
         df = pd.read_html('http://space-facts.com/mars/')[0]
-    
+        #df = pd.read_html('http://space-facts.com/mars/')
+
     except BaseException:
+        #print("Error!")
+        #raise
         return None
 
     # Assign columns and set index of dataframe
-    df.columns=['Description', 'Mars']
+    df.columns = ['Description', 'Mars']
     df.set_index('Description', inplace=True)
 
-    # use to_html method to convert DataFrame back into HTML format, add bootstrap. 
-    df.to_html(classes="table table-striped")
+    # use to_html method to convert DataFrame back into HTML format, add bootstrap.
+    return df.to_html(classes="table table-striped")
 
-#tells Flask that our script is complete and ready for action.
+
+test_output = mars_facts()
+# tells Flask that our script is complete and ready for action.
 if __name__ == "__main__":
     # If running as script, print scraped data
     print(scrape_all())
-
-
