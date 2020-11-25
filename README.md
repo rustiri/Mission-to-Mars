@@ -31,7 +31,7 @@ The purpose of this project is as follows:
 
 
 ## File Information
-# Mission-to-Mars\
+### Mission-to-Mars\
 * app.py: Python file that uses Flask to run URL (localhost:5000), calls template\index.html and updates Mongo DB with new data
 * Mission_to_Mars_Challenge.ipynb and Mission_to_Mars.ipynb contains Jupyter Notebook files
 * scraping.py: Python file that scrapes new data
