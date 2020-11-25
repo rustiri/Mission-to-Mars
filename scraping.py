@@ -21,6 +21,7 @@ def scrape_all():
         "news_paragraph": news_paragraph,
         "featured_image": featured_image(browser),
         "facts": mars_facts(),
+        "weather": mars_weather(browser),
         "hemispheres": mars_hemisphere(browser),
         "last_modified": dt.datetime.now()
     }
@@ -118,6 +119,30 @@ def mars_facts():
     return df.to_html(classes="table table-striped table-bordered")
 
 
+# ## Mars Weather
+
+def mars_weather(browser):
+
+    mars_weather=[]
+    # Visit the weather website
+    url = 'https://mars.nasa.gov/insight/weather/'
+    browser.visit(url)
+
+    # Parse the data
+    html = browser.html
+    weather_soup = soup(html, 'html.parser')
+
+    # Scrape the Daily Weather Report table
+    #weather_table = weather_soup.find('div', class_='textWhite')
+    weather_data = weather_soup.find('div', class_='vAlignTop textWhite')
+    weather_p = weather_data.find('p').get_text()
+    weather_temp = weather_data.find('div', class_="textLarger vCentered").get_text()
+    #print(weather_table.prettify())
+
+    return weather_p + weather_temp
+    #return df.to_html(classes="table table-striped table-bordered")
+
+# ### Mars Hemispheres
 def mars_hemisphere(browser):
     # 1. Use browser to visit the URL 
     url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
