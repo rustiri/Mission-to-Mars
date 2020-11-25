@@ -174,7 +174,7 @@ def mars_hemisphere(browser):
     return hemisphere_image_urls
 
 
-test_output = mars_facts()
+#test_output = mars_facts()
 # tells Flask that our script is complete and ready for action.
 if __name__ == "__main__":
     # If running as script, print scraped data
